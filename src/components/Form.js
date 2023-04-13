@@ -1,19 +1,22 @@
 import React, { useState } from 'react'
 import { useEffect } from 'react'
-import {v4 as uuidv4} from "uuid"
 import {MdAdd} from "react-icons/md"
 import axios from './AxiosConfig/axios.js';
+import { addTodo } from '../actions/index.js';
+import { useDispatch } from 'react-redux';
 
-const Form = ({setToday,setUpcoming,setEditTodos,editTodos,type}) => {
+const Form = ({editTodos}) => {
 
-  const [username ,setUsername] = useState(JSON.parse(localStorage.getItem('user')))
+  const [username] = useState(JSON.parse(localStorage.getItem('user')))
 
   const [Input,setInput] = useState("")
   const [desc,setDesc] = useState("")
   const [date,setDate] = useState("")
   //const [editTodos,setEditTodos] = useState(null)
-  const [todos,setTodos] = useState([])
-  
+  // const [todos,setTodos] = useState([])
+
+  const dispatch = useDispatch()
+ 
 
   var day = new Date();
   var dd = day.getDate();
@@ -43,33 +46,32 @@ const Form = ({setToday,setUpcoming,setEditTodos,editTodos,type}) => {
     }
 
     const updateTodos = async (title, _id, des, date,username) =>{
-        const newTodo = todos.map((todo)=>{
-          return todo._id===_id ? {title,_id,des,date,username} : todo
-        })
+        
         await axios.patch(`/listData/${_id}`, {                        //get inbox data
                                   title: title,
                                   des:des,
                                   date:date,
                                   username:username
                               })
-                                .then((response) => response)
-                                .then((json) => console.log(json));
-
-        setTodos(newTodo)
-        setEditTodos("")
+                                .then((response) => {
+                                  // dispatch(getTodo(response))
+                                  console.log(response)
+                                  
+                                })
+                                
     } 
 
-    useEffect(()=>{                              //from editTodos -----> from input fields
-          if(editTodos){
-            setInput(editTodos.title)
-            setDesc(editTodos.des)
-            setDate(editTodos.date)
-          }else{
-            setInput("")
-            setDesc("")
-            setDate("")
-          }
-    },[setInput,editTodos,setDesc,setDate])
+    // useEffect(()=>{                              //from editTodos -----> from input fields
+    //       if(editTodos){
+    //         setInput(editTodos.title)
+    //         setDesc(editTodos.des)
+    //         setDate(editTodos.date)
+    //       }else{
+    //         setInput("")
+    //         setDesc("")
+    //         setDate("")
+    //       }
+    // },[setInput,editTodos,setDesc,setDate])
 
     const onSubmitForm = async (event)=>{
       event.preventDefault();
@@ -80,7 +82,10 @@ const Form = ({setToday,setUpcoming,setEditTodos,editTodos,type}) => {
                         "des":desc,
                         "title":Input,
                         "username":username
-                    }).then((r)=>setTodos(r)).catch((err) => console.log(err));
+                    }).then((r)=>{
+                      console.log(r.data)
+                    dispatch(addTodo(r.data))
+                    }).catch((err) => console.log(err));
 
               setInput("");
               setDesc("");
@@ -93,7 +98,9 @@ const Form = ({setToday,setUpcoming,setEditTodos,editTodos,type}) => {
 
   return (
     <form onSubmit={onSubmitForm} className="flex">
-        <button type='submit' className=' mx-4 '><MdAdd className='cursor-pointer text-red-400 hover:bg-red-500 rounded-full hover:text-white' size={22}></MdAdd></button>
+        <button type='submit' className=' mx-4 '>
+          <MdAdd className='cursor-pointer text-red-400 hover:bg-red-500 rounded-full hover:text-white' size={22}></MdAdd>
+          </button>
         <div className='flex-row'>
           <input type="text" placeholder='  Add task  ' value={Input} required onChange={onInputChange} />
           <input type="text" placeholder='  Add Des  ' value={desc} required onChange={onDesChange} />
