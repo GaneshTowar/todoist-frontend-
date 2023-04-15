@@ -23,8 +23,11 @@ export const deleteTodo = (data)=> {
     }
 }
 
-export const editTodo = ()=> {
+export const editTodo = (data)=> {
+    console.log(data)
+    console.log("action edit")
     return {
-        type: "EDIT_TODO"
+        type: "EDIT_TODO",
+        payload:data
     }
 }

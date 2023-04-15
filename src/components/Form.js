@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
 import { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {MdAdd} from "react-icons/md"
 import axios from './AxiosConfig/axios.js';
-import { addTodo } from '../actions/index.js';
-import { useDispatch } from 'react-redux';
+import { addTodo,editTodo } from '../actions/index.js';
+import { useDispatch,useSelector } from 'react-redux';
 
-const Form = ({editTodos}) => {
+const Form = () => {
 
   const [username] = useState(JSON.parse(localStorage.getItem('user')))
 
@@ -15,13 +16,15 @@ const Form = ({editTodos}) => {
   //const [editTodos,setEditTodos] = useState(null)
   // const [todos,setTodos] = useState([])
 
+  const editTodos = useSelector((state)=> state.edittodoReducer.editList)
+  
   const dispatch = useDispatch()
- 
 
   var day = new Date();
   var dd = day.getDate();
   var mm = day.getMonth()+1; 
   var yyyy = day.getFullYear();
+  
   if(dd<10) 
   {
       dd='0'+dd;
@@ -54,27 +57,35 @@ const Form = ({editTodos}) => {
                                   username:username
                               })
                                 .then((response) => {
-                                  // dispatch(getTodo(response))
-                                  console.log(response)
                                   
+                                  console.log(response)
+                                  dispatch(editTodo([]))
+                                }).catch((e)=>{
+                                  console.log(e)
+                                  dispatch(editTodo([]))
                                 })
+
+                                setInput("");
+                                setDesc("");
+                                setDate("");
                                 
     } 
 
-    // useEffect(()=>{                              //from editTodos -----> from input fields
-    //       if(editTodos){
-    //         setInput(editTodos.title)
-    //         setDesc(editTodos.des)
-    //         setDate(editTodos.date)
-    //       }else{
-    //         setInput("")
-    //         setDesc("")
-    //         setDate("")
-    //       }
-    // },[setInput,editTodos,setDesc,setDate])
+    useEffect(()=>{                              //from editTodos -----> from input fields
+          if(editTodos){
+            setInput(editTodos.title)
+            setDesc(editTodos.des)
+            setDate(editTodos.date)
+          }else{
+            setInput("")
+            setDesc("")
+            setDate("")
+          }
+    },[setInput,editTodos,setDesc,setDate])
 
     const onSubmitForm = async (event)=>{
       event.preventDefault();
+
 
           if(!editTodos){      
               axios.post(`/addlist`,{                                   //add data api call

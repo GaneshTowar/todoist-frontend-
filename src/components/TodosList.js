@@ -3,9 +3,8 @@ import { useEffect } from 'react'
 import {VscEdit} from 'react-icons/vsc'
 import { useNavigate } from 'react-router-dom'
 import axios from './AxiosConfig/axios.js';
-import { useState } from 'react';
 import { useDispatch,useSelector } from 'react-redux';
-import { deleteTodo, getTodo } from '../actions/index.js';
+import { deleteTodo, getTodo,editTodo } from '../actions/index.js';
 
 
 const TodosList = ({type})=> {
@@ -13,6 +12,7 @@ const TodosList = ({type})=> {
     //const [todos,setTodos] = useState([])
     const dispatch = useDispatch();
     const list = useSelector((state)=> state.todoReducers.list)
+    const editTodos = useSelector((state)=> state.edittodoReducer.editList)
 
     const handelDelete =async ({_id}) =>{     
 
@@ -28,9 +28,10 @@ const TodosList = ({type})=> {
         event.preventDefault()
         
     }
-    const editHandler =({_id}) =>{                                       
+    const editHandler =(todo) =>{                                       
         //const findTodo = todos.find((todo)=> todo._id === _id)
         //setEditTodos(findTodo)
+        dispatch(editTodo(todo))
     }
 
     const Navigate = useNavigate()                    // if user is not loggedin navigate to home page
@@ -65,7 +66,7 @@ const TodosList = ({type})=> {
                 }).catch((err)=> console.log(err))
 
             }
-    },[type,dispatch])
+    },[type,dispatch,editTodos])
     
   return (
     <><ul className='flex-row justify-evenly'>
