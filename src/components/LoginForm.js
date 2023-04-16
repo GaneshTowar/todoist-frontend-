@@ -41,14 +41,6 @@ const LoginForm = ()=> {
 })
     const navigate = useNavigate()
 
-
-    const onSubmitLogin = async (event) =>{
-        event.preventDefault()
-
-        
-        
-    }
-
   
     
 

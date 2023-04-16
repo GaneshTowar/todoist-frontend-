@@ -1,10 +1,17 @@
 import React, { useState } from 'react'
 import { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
 import {MdAdd} from "react-icons/md"
 import axios from './AxiosConfig/axios.js';
 import { addTodo,editTodo } from '../actions/index.js';
 import { useDispatch,useSelector } from 'react-redux';
+import { useFormik } from 'formik';
+import { formSchema } from './schema/index.js';
+
+const initialValues ={
+    input:"",
+    desc:"",
+    date:"",  
+};
 
 const Form = () => {
 
@@ -13,11 +20,8 @@ const Form = () => {
   const [Input,setInput] = useState("")
   const [desc,setDesc] = useState("")
   const [date,setDate] = useState("")
-  //const [editTodos,setEditTodos] = useState(null)
-  // const [todos,setTodos] = useState([])
-
   const editTodos = useSelector((state)=> state.edittodoReducer.editList)
-  
+
   const dispatch = useDispatch()
 
   var day = new Date();
@@ -34,6 +38,18 @@ const Form = () => {
   {
       mm='0'+mm;
   } 
+
+
+
+  const {values, errors,touched, handleBlur, handleChange, handleSubmit}= useFormik({
+    initialValues:initialValues,
+    validationSchema: formSchema,
+    onSubmit:async (value,action)=>{
+
+
+    }
+
+  })
 
 
     const onInputChange = (event) => {
@@ -87,7 +103,7 @@ const Form = () => {
       event.preventDefault();
 
 
-          if(!editTodos){      
+          if(editTodos.length===0){      
               axios.post(`/addlist`,{                                   //add data api call
                         "date":date,
                         "des":desc,
@@ -95,7 +111,7 @@ const Form = () => {
                         "username":username
                     }).then((r)=>{
                       console.log(r.data)
-                    dispatch(addTodo(r.data))
+                      dispatch(addTodo(r.data))
                     }).catch((err) => console.log(err));
 
               setInput("");

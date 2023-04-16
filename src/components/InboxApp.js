@@ -6,7 +6,7 @@ import SideBar from './SideBar';
 import AddPop from './AddPop.js';
 import { Outlet } from 'react-router-dom';
 
-function InboxApp({todos,setTodos,todaylen,upcominglen,inboxlen,setToday,setUpcoming,setEditTodos,editTodos}) {
+function InboxApp({todos,setTodos,todaylen,upcominglen,inboxlen}) {
 
     const [headername,setHeadername] = useState("Inbox")
     const [toggleAddpop,setToggleAddpop] = useState(false)
@@ -43,13 +43,6 @@ function InboxApp({todos,setTodos,todaylen,upcominglen,inboxlen,setToday,setUpco
 
         <Outlet/>
         <Form 
-          todos={todos}
-          setTodos={setTodos}
-          setToday={setToday}
-          setUpcoming={setUpcoming}
-          setEditTodos={setEditTodos}
-          editTodos={editTodos}
-          
             /> 
         
     </div>

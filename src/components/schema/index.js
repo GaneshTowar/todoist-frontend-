@@ -12,3 +12,11 @@ import * as Yup from 'yup';
     email: Yup.string().email().required("Please enter email"),
     password : Yup.string().min(6).required("Please enter your password"),
  })
+
+ export const formSchema = Yup.object({
+   
+      title: Yup.string().required("please enter title"),
+      des: Yup.string().required("please enter des"),
+      date: Yup.date().required("please enter date")
+
+ })
