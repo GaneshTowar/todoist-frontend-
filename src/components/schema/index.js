@@ -15,8 +15,8 @@ import * as Yup from 'yup';
 
  export const formSchema = Yup.object({
    
-      title: Yup.string().required("please enter title"),
-      des: Yup.string().required("please enter des"),
-      date: Yup.date().required("please enter date")
+      title: Yup.string(),
+      des: Yup.string(),
+      date: Yup.date()
 
  })

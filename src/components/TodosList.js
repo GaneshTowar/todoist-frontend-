@@ -9,7 +9,6 @@ import { deleteTodo, getTodo,editTodo } from '../actions/index.js';
 
 const TodosList = ({type})=> {
 
-    //const [todos,setTodos] = useState([])
     const dispatch = useDispatch();
     const list = useSelector((state)=> state.todoReducers.list)
     const editTodos = useSelector((state)=> state.edittodoReducer.editList)
@@ -29,8 +28,6 @@ const TodosList = ({type})=> {
         
     }
     const editHandler =(todo) =>{                                       
-        //const findTodo = todos.find((todo)=> todo._id === _id)
-        //setEditTodos(findTodo)
         dispatch(editTodo(todo))
     }
 

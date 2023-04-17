@@ -2,7 +2,7 @@
 import './App.css';
 import React from 'react';
 import InboxApp from './components/InboxApp';
-import { BrowserRouter as Router, Form, Route, Routes } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import RegForm from './components/RegForm.js';
 import LoginForm from './components/LoginForm.js'
 import { useState } from 'react';
