@@ -1,6 +1,39 @@
-import { createStore } from "redux"
-import rootReducer from "./reducers"
+import { create } from 'zustand'
 
-const store = createStore(rootReducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__())
+const initialData = {
+    list: [],
+    editList: []
+}
 
-export default store
+
+const useStore = create((set,get) => ({
+  ...initialData,
+  addTodo: (listdata) => set((state) => ({...state,
+    list:[
+        ...state.list,
+        listdata] })),
+  
+
+
+    getTodo : (getdata) => set((state)=>({...state,
+        list:[
+            ...getdata] })),
+    
+    deleteTodo : (deletedata) => {
+        const list = get().list
+        const deletedtodo1 = list.filter((todo)=>{
+            return todo._id !== deletedata._id
+        })
+        set((state)=>({...state,
+        list:[
+            ...deletedtodo1]
+    }))},
+
+    editTodos: (editdata) => set((state)=>({...state,
+         editList:editdata
+        
+    }))
+            
+
+}))
+export default useStore

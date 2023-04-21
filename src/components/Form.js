@@ -2,11 +2,10 @@ import React, { useState } from 'react'
 import { useEffect } from 'react'
 import {MdAdd} from "react-icons/md"
 import axios from './AxiosConfig/axios.js';
-import { addTodo,editTodo } from '../actions/index.js';
-import { useDispatch,useSelector } from 'react-redux';
 import { useFormik } from 'formik';
 import { formSchema } from './schema/index.js';
 import { date } from 'yup';
+import useStore from '../store.js';
 
 const initialValues ={
     input:"",
@@ -18,9 +17,10 @@ const Form = () => {
 
   const [username] = useState(JSON.parse(localStorage.getItem('user')))
 
-  const editTodos = useSelector((state)=> state.edittodoReducer.editList)
+  const editTodos = useStore((state)=>state.editList)               // editTodos ===> list 
+  const addTodo = useStore((state)=> state.addTodo)
+  const editTodo = useStore((state)=> state.editTodos)
 
-  const dispatch = useDispatch()
 
   var day = new Date();
   var dd = day.getDate();
@@ -54,7 +54,7 @@ const Form = () => {
                         "username":username
                       }).then((r)=>{
                         console.log(r.data)
-                        dispatch(addTodo(r.data))
+                        addTodo(r.data)
                       }).catch((err) => console.log(err));
                      
                     }else{
@@ -68,10 +68,10 @@ const Form = () => {
                       .then((response) => {
                         
                         console.log(response)
-                        dispatch(editTodo([]))
+                        editTodo([])
                       }).catch((e)=>{
                         console.log(e)
-                        dispatch(editTodo([]))
+                        editTodo([])
                       })
 
 

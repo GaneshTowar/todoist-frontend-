@@ -3,21 +3,25 @@ import { useEffect } from 'react'
 import {VscEdit} from 'react-icons/vsc'
 import { useNavigate } from 'react-router-dom'
 import axios from './AxiosConfig/axios.js';
-import { useDispatch,useSelector } from 'react-redux';
-import { deleteTodo, getTodo,editTodo } from '../actions/index.js';
+import useStore from '../store.js';
 
 
 const TodosList = ({type})=> {
 
-    const dispatch = useDispatch();
-    const list = useSelector((state)=> state.todoReducers.list)
-    const editTodos = useSelector((state)=> state.edittodoReducer.editList)
+    
+    const list = useStore((state) => state.list)
+    
+    const editList = useStore((state)=> state.editList)
+    const editTodos =  useStore((state)=> state.editTodos)  // method in store to edit the edit 
+    const getTodo = useStore((state)=> state.getTodo)
+    const deleteTodo = useStore((state)=> state.deleteTodo)
+
 
     const handelDelete =async ({_id}) =>{     
 
         axios.delete(`/listData/${_id}`).then((response)=>{
             console.log(response)
-            dispatch(deleteTodo(response.data))
+            deleteTodo(response.data)
         })
         
 
@@ -28,7 +32,7 @@ const TodosList = ({type})=> {
         
     }
     const editHandler =(todo) =>{                                       
-        dispatch(editTodo(todo))
+        editTodos(todo)
     }
 
     const Navigate = useNavigate()                    // if user is not loggedin navigate to home page
@@ -43,27 +47,27 @@ const TodosList = ({type})=> {
             if(type==='inbox'){
 
                 axios.get(`/listData/${JSON.parse(localStorage.getItem('user'))}`).then((response) =>{    // Get INBOX data
-                    dispatch(getTodo(response.data))
+                    getTodo(response.data)
                     console.log(response.data)
                   }).catch((err) => console.log(err));
 
             }if(type==='upcoming'){
 
                 axios.get(`/upcoming/${JSON.parse(localStorage.getItem('user'))}`).then((response) =>{   // Get upcoming data
-                    dispatch(getTodo(response.data))
+                    getTodo(response.data)
                     console.log(response.data)
               }).catch((err)=> console.log(err))                       
         
             }if(type==='today'){
 
                 axios.get(`/todays/${JSON.parse(localStorage.getItem('user'))}`).then((response) =>{   // gET todays DATA
-                        dispatch(getTodo(response.data))
+                        getTodo(response.data)
                         console.log(response.data)
 
                 }).catch((err)=> console.log(err))
 
             }
-    },[type,dispatch,editTodos])
+    },[type,getTodo,editList])
     
   return (
     <><ul className='flex-row justify-evenly'>
